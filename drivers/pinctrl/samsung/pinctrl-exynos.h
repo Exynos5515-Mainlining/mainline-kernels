@@ -132,6 +132,15 @@
 		.pctl_res_idx   = pctl_idx,			\
 	}							\
 
+#define EXYNOS5515_PIN_BANK_OFF_EINTN(pins, reg, id)		\
+	{							\
+		.type		= &exynos850_bank_type_off,	\
+		.pctl_offset	= reg,				\
+		.nr_pins	= pins,				\
+		.eint_type	= EINT_TYPE_NONE,		\
+		.name		= id				\
+	}
+
 #define EXYNOS7870_PIN_BANK_EINTN(pins, reg, id)		\
 	{							\
 		.type		= &exynos7870_bank_type_alive,	\

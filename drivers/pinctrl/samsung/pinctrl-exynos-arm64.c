@@ -488,6 +488,32 @@ const struct samsung_pinctrl_of_match_data exynos5433_of_data __initconst = {
 	.num_ctrl	= ARRAY_SIZE(exynos5433_pin_ctrl),
 };
 
+/* TODO: other exynos5515 pin controllers */
+
+/* pin banks of exynos5515 pin-controller 3 (FSYS) */
+static const struct samsung_pin_bank_data exynos5515_pin_banks3[] __initconst = {
+	/* Must start with EINTG banks, ordered by EINT group number. */
+	EXYNOS5515_PIN_BANK_OFF_EINTN(4, 0x000, "gpf0"),
+	EXYNOS5515_PIN_BANK_OFF_EINTN(8, 0x020, "gpf1"),
+	EXYNOS5515_PIN_BANK_OFF_EINTN(6, 0x040, "gpf2"),
+};
+
+static const struct samsung_pin_ctrl exynos5515_pin_ctrl[] __initconst = {
+	{
+		/* pin-controller instance 3 FSYS data */
+		.pin_banks	= exynos5515_pin_banks3,
+		.nr_banks	= ARRAY_SIZE(exynos5515_pin_banks3),
+		.eint_gpio_init	= exynos_eint_gpio_init,
+		.suspend	= exynos_pinctrl_suspend,
+		.resume		= exynos_pinctrl_resume,
+	},
+};
+
+const struct samsung_pinctrl_of_match_data exynos5515_of_data __initconst = {
+	.ctrl		= exynos5515_pin_ctrl,
+	.num_ctrl	= ARRAY_SIZE(exynos5515_pin_ctrl),
+};
+
 /* pin banks of exynos7 pin-controller - ALIVE */
 static const struct samsung_pin_bank_data exynos7_pin_banks0[] __initconst = {
 	/* Must start with EINTG banks, ordered by EINT group number. */
