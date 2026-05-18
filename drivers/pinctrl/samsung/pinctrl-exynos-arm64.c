@@ -500,12 +500,22 @@ static const struct samsung_pin_bank_data exynos5515_pin_banks3[] __initconst = 
 
 static const struct samsung_pin_ctrl exynos5515_pin_ctrl[] __initconst = {
 	{
+		/* pin-controller instance 0 ALIVE data */
+	}, {
+		/* pin-controller instance 1 CMGP data */
+	}, {
+		/* pin-controller instance 2 DISP data */
+	}, {
 		/* pin-controller instance 3 FSYS data */
 		.pin_banks	= exynos5515_pin_banks3,
 		.nr_banks	= ARRAY_SIZE(exynos5515_pin_banks3),
 		.eint_gpio_init	= exynos_eint_gpio_init,
 		.suspend	= exynos_pinctrl_suspend,
 		.resume		= exynos_pinctrl_resume,
+	}, {
+		/* pin-controller instance 4 PERI data */
+	}, {
+		/* pin-controller instance 5 VTS data */
 	},
 };
 
