@@ -1,0 +1,123 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+/*
+ * Samsung Galaxy Watch FE (lucky7/SM-R861/SM-R866) device tree source
+ *
+ * Copyright (c) 2026 Aiden Isik <aidenisik+git@member.fsf.org>
+ */
+
+/dts-v1/;
+#include "exynos5515.dtsi"
+
+/ {
+	model = "Samsung Galaxy Watch FE (SM-R861/SM-R866)";
+	compatible = "samsung,lucky7", "samsung,exynos5515";
+	chassis-type = "watch";
+
+	aliases {
+		/* TODO: required or not? probably not */
+		mmc = &mmc;
+	};
+
+	chosen {
+		#address-cells = <2>;
+		#size-cells = <1>;
+		ranges;
+
+		bootargs = "regulator_ignore_unused pd_ignore_unused earlycon=gs101,0x10080000 loglevel=7";
+		stdout-path = &serial;
+
+		framebuffer@9e0cf000 {
+			compatible = "simple-framebuffer";
+			reg = <0x0 0x9e0cf000 (396 * 396 * 4)>;
+			width = <396>;
+			height = <396>;
+			stride = <(396 * 4)>;
+			format = "a8r8g8b8";
+		};
+	};
+
+	memory@80000000 {
+		device_type = "memory";
+		reg = <0x0 0x80000000 0x3e680000>,
+		      <0x0 0xc0000000 0x20000000>;
+	};
+
+	reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <1>;
+		ranges;
+
+		framebuffer@9e0cf000 {
+			reg = <0x0 0x9e0cf000 (396 * 396 * 4)>;
+			no-map;
+		};
+
+		misc-rmem {
+			reg = <0x0 0x87000000 0x200000>,
+			      <0x0 0x87fff000 0x1000>,
+			      <0x0 0x8a000000 0x31000>,
+			      <0x0 0x8d800000 0x180000>,
+			      <0x0 0x8ffff000 0x33000>,
+			      <0x0 0x90100000 0x200000>,
+			      <0x0 0x98a00000 0x600000>,
+			      <0x0 0x9a000000 0xc00000>,
+			      <0x0 0x9b000000 0x400000>,
+			      <0x0 0x9bd00000 0x208000>,
+			      <0x0 0x9c000000 0x20000>,
+			      <0x0 0xa0000000 0x10000>,
+			      <0x0 0xa0010000 0x400000>,
+			      <0x0 0xa0510000 0x1000>,
+			      <0x0 0xa0900000 0x2000>,
+			      <0x0 0xa0902000 0x1000>,
+			      <0x0 0xa0910000 0x3c000>,
+			      <0x0 0xb0000000 0x200000>,
+			      <0x0 0xb1000000 0x200000>,
+			      <0x0 0xbbfff000 0x1000000>,
+			      <0x0 0xbcfff000 0x1000>,
+			      <0x0 0xbd430000 0x1250000>,
+			      <0x0 0xd0000000 0x5d00000>,
+			      <0x0 0xdc444000 0x2bbc000>,
+			      <0x0 0xdf005000 0x1000>,
+			      <0x0 0xdf008000 0x1000>,
+			      <0x0 0xdf009000 0x12000>,
+			      <0x0 0xdf01b000 0x21000>,
+			      <0x0 0xdf03c000 0x1000>,
+			      <0x0 0xdf03d000 0xfc3000>;
+			no-map;
+		};
+	};
+};
+
+&mmc {
+	/* TODO: Try higher slew rates in place of sd0_clk */
+	pinctrl-names = "default";
+	pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_rdqs &sd0_bus1 &sd0_bus4 &sd0_bus8>;
+
+	bus-width = <8>;
+	fifo-depth = <64>;
+	samsung,dw-mshc-ciu-div = <3>;
+	samsung,dw-mshc-sdr-timing = <0 4>;
+	samsung,dw-mshc-ddr-timing = <2 4>;
+	samsung,dw-mshc-hs400-timing = <0 4>;
+	non-removable;
+
+	status = "okay";
+};
+
+&oscclk {
+	clock-frequency = <26000000>;
+};
+
+&serial {
+	status = "okay";
+};
+
+&usbdrd {
+	/* TODO: Regulators */
+
+	status = "okay";
+};
+
+&watchdog {
+	status = "okay";
+};
