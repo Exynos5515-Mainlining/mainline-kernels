@@ -179,7 +179,7 @@
 		};
 
 		usbdrd_phy: phy@10520000 {
-			compatible = "samsung,exynos990-usbdrd-phy";
+			compatible = "samsung,exynos5515-usbdrd-phy";
 			reg = <0x10520000 0x200>;
 			#phy-cells = <1>;
 
