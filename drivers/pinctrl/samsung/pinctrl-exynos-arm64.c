@@ -505,6 +505,25 @@ static const struct samsung_pin_bank_data exynos5515_pin_banks3[] __initconst = 
 	EXYNOS5515_PIN_BANK_OFF_EINTN(6, 0x040, "gpf2"),
 };
 
+/* pin banks of exynos5515 pin-controller 4 (PERI) */
+static const struct samsung_pin_bank_data exynos5515_pin_banks4[] __initconst = {
+	GS101_PIN_BANK_EINTG(2, 0x000, "gpp0", 0x00, 0x00),
+	GS101_PIN_BANK_EINTG(2, 0x020, "gpp1", 0x04, 0x04),
+	GS101_PIN_BANK_EINTG(2, 0x040, "gpp2", 0x08, 0x08),
+	GS101_PIN_BANK_EINTG(2, 0x060, "gpp3", 0x0c, 0x0c),
+	GS101_PIN_BANK_EINTG(2, 0x080, "gpp4", 0x10, 0x10),
+	GS101_PIN_BANK_EINTG(2, 0x0A0, "gpc0", 0x14, 0x14),
+	GS101_PIN_BANK_EINTG(2, 0x0C0, "gpc1", 0x18, 0x18),
+	GS101_PIN_BANK_EINTG(2, 0x0E0, "gpg0", 0x1c, 0x1c),
+	GS101_PIN_BANK_EINTG(2, 0x100, "gpg1", 0x20, 0x20),
+	GS101_PIN_BANK_EINTG(2, 0x120, "gpp2", 0x24, 0x24),
+	GS101_PIN_BANK_EINTG(2, 0x140, "gpp3", 0x28, 0x28),
+	GS101_PIN_BANK_EINTG(2, 0x160, "gpp4", 0x2c, 0x2c),
+	GS101_PIN_BANK_EINTG(2, 0x180, "gpp5", 0x30, 0x30),
+	GS101_PIN_BANK_EINTG(2, 0x1A0, "gpp6", 0x34, 0x34),
+	GS101_PIN_BANK_EINTG(2, 0x1C0, "gpp7", 0x38, 0x38),
+};
+
 static const struct samsung_pin_ctrl exynos5515_pin_ctrl[] __initconst = {
 	{
 		/* pin-controller instance 0 ALIVE data */
@@ -527,6 +546,11 @@ static const struct samsung_pin_ctrl exynos5515_pin_ctrl[] __initconst = {
 		.resume		= exynos_pinctrl_resume,
 	}, {
 		/* pin-controller instance 4 PERI data */
+		.pin_banks	= exynos5515_pin_banks4,
+		.nr_banks	= ARRAY_SIZE(exynos5515_pin_banks4),
+		.eint_gpio_init	= exynos_eint_gpio_init,
+		.suspend	= exynos_pinctrl_suspend,
+		.resume		= exynos_pinctrl_resume,
 	}, {
 		/* pin-controller instance 5 VTS data */
 	},
