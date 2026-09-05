@@ -6,6 +6,7 @@
  */
 
 #include <dt-bindings/clock/samsung,exynos5515-cmu.h>
+#include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/interrupt-controller/arm-gic.h>
 
 / {
@@ -18,6 +19,7 @@
 	aliases {
 		pinctrl0 = &pinctrl_alive;
 		pinctrl3 = &pinctrl_fsys;
+		pinctrl4 = &pinctrl_peri;
 	};
 
 	cpus {
@@ -135,6 +137,24 @@
 			pinctrl-names = "default";
 			samsung,uart-fifosize = <256>;
 			status = "disabled";
+		};
+
+		/*
+		 * Bitbang until touchscreen driver is known working
+		 * (which can then be used to test i2c driver).
+		 */
+		hsi2c_3: i2c@100c0000 {
+			compatible = "i2c-gpio";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			scl-gpios = <&gpp3 1 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+			sda-gpios = <&gpp3 0 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+		};
+
+		pinctrl_peri: pinctrl@10110000 {
+			compatible = "samsung,exynos5515-pinctrl";
+			reg = <0x10110000 0x1000>;
+			interrupts = <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>;
 		};
 
 		cmu_fsys: clock-controller@10400000 {
