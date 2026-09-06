@@ -147,8 +147,11 @@
 			compatible = "i2c-gpio";
 			#address-cells = <1>;
 			#size-cells = <0>;
+			/* TODO: unsure if flags are correct */
 			scl-gpios = <&gpp3 1 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
 			sda-gpios = <&gpp3 0 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+
+			status = "disabled";
 		};
 
 		pinctrl_peri: pinctrl@10110000 {
