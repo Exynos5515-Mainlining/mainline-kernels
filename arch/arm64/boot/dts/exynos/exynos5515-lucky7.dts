@@ -205,6 +205,20 @@
 	};
 };
 
+&hsi2c_3 {
+	status = "okay";
+
+	touchscreen@6c {
+		compatible = "hideep,hideep-ts";
+		reg = <0x6c>;
+		interrupt-parent = <&gpa0>;
+		interrupts = <1 IRQ_TYPE_NONE>;
+		reset-gpios = <&gpg4 0 0>;
+		touchscreen-size-x = <396>;
+		touchscreen-size-y = <396>;
+	};
+};
+
 &mmc {
 	/* TODO: Try higher slew rates in place of sd0_clk */
 	pinctrl-names = "default";
