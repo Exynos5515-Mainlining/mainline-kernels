@@ -516,12 +516,12 @@ static const struct samsung_pin_bank_data exynos5515_pin_banks4[] __initconst = 
 	GS101_PIN_BANK_EINTG(2, 0x0C0, "gpc1", 0x18, 0x18),
 	GS101_PIN_BANK_EINTG(2, 0x0E0, "gpg0", 0x1c, 0x1c),
 	GS101_PIN_BANK_EINTG(2, 0x100, "gpg1", 0x20, 0x20),
-	GS101_PIN_BANK_EINTG(2, 0x120, "gpp2", 0x24, 0x24),
-	GS101_PIN_BANK_EINTG(2, 0x140, "gpp3", 0x28, 0x28),
-	GS101_PIN_BANK_EINTG(2, 0x160, "gpp4", 0x2c, 0x2c),
-	GS101_PIN_BANK_EINTG(2, 0x180, "gpp5", 0x30, 0x30),
-	GS101_PIN_BANK_EINTG(2, 0x1A0, "gpp6", 0x34, 0x34),
-	GS101_PIN_BANK_EINTG(2, 0x1C0, "gpp7", 0x38, 0x38),
+	GS101_PIN_BANK_EINTG(2, 0x120, "gpg2", 0x24, 0x24),
+	GS101_PIN_BANK_EINTG(2, 0x140, "gpg3", 0x28, 0x28),
+	GS101_PIN_BANK_EINTG(2, 0x160, "gpg4", 0x2c, 0x2c),
+	GS101_PIN_BANK_EINTG(2, 0x180, "gpg5", 0x30, 0x30),
+	GS101_PIN_BANK_EINTG(2, 0x1A0, "gpg6", 0x34, 0x34),
+	GS101_PIN_BANK_EINTG(2, 0x1C0, "gpg7", 0x38, 0x38),
 };
 
 static const struct samsung_pin_ctrl exynos5515_pin_ctrl[] __initconst = {
