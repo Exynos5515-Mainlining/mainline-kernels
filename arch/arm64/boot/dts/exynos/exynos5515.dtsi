@@ -141,15 +141,64 @@
 
 		/*
 		 * Bitbang until touchscreen driver is known working
-		 * (which can then be used to test i2c driver).
+		 * (which can then be used to test hsi2c_3 driver).
 		 */
+		hsi2c_0: i2c@10090000 {
+			compatible = "i2c-gpio";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			scl-gpios = <&gpp0 0 GPIO_ACTIVE_LOW>;
+			sda-gpios = <&gpp0 1 GPIO_ACTIVE_LOW>;
+
+			status = "disabled";
+		};
+
+		hsi2c_1: i2c@100a0000 {
+			compatible = "i2c-gpio";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			scl-gpios = <&gpp1 0 GPIO_ACTIVE_LOW>;
+			sda-gpios = <&gpp1 1 GPIO_ACTIVE_LOW>;
+
+			status = "disabled";
+		};
+
+		hsi2c_2: i2c@100b0000 {
+			compatible = "i2c-gpio";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			scl-gpios = <&gpp2 0 GPIO_ACTIVE_LOW>;
+			sda-gpios = <&gpp2 1 GPIO_ACTIVE_LOW>;
+
+			status = "disabled";
+		};
+
 		hsi2c_3: i2c@100c0000 {
 			compatible = "i2c-gpio";
 			#address-cells = <1>;
 			#size-cells = <0>;
-			/* TODO: unsure if flags are correct */
-			scl-gpios = <&gpp3 1 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-			sda-gpios = <&gpp3 0 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+			scl-gpios = <&gpp3 0 GPIO_ACTIVE_LOW>;
+			sda-gpios = <&gpp3 1 GPIO_ACTIVE_LOW>;
+
+			status = "disabled";
+		};
+
+		hsi2c_4: i2c@100d0000 {
+			compatible = "i2c-gpio";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			scl-gpios = <&gpc0 0 GPIO_ACTIVE_LOW>;
+			sda-gpios = <&gpc0 1 GPIO_ACTIVE_LOW>;
+
+			status = "disabled";
+		};
+
+		hsi2c_5: i2c@100e0000 {
+			compatible = "i2c-gpio";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			scl-gpios = <&gpc0 2 GPIO_ACTIVE_LOW>;
+			sda-gpios = <&gpc0 3 GPIO_ACTIVE_LOW>;
 
 			status = "disabled";
 		};

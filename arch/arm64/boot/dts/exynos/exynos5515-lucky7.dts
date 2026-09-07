@@ -205,6 +205,18 @@
 	};
 };
 
+&hsi2c_0 {
+	status = "okay";
+};
+
+&hsi2c_1 {
+	status = "okay";
+};
+
+&hsi2c_2 {
+	status = "okay";
+};
+
 &hsi2c_3 {
 	status = "okay";
 
@@ -213,10 +225,18 @@
 		reg = <0x6c>;
 		interrupt-parent = <&gpa0>;
 		interrupts = <1 IRQ_TYPE_NONE>;
-		reset-gpios = <&gpg4 0 0>;
+		reset-gpios = <&gpg4 0 GPIO_ACTIVE_HIGH>;
 		touchscreen-size-x = <396>;
 		touchscreen-size-y = <396>;
 	};
+};
+
+&hsi2c_4 {
+	status = "okay";
+};
+
+&hsi2c_5 {
+	status = "okay";
 };
 
 &mmc {
