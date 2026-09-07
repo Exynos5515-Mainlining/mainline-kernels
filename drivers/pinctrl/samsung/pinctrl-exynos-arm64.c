@@ -524,6 +524,10 @@ static const struct samsung_pin_bank_data exynos5515_pin_banks4[] __initconst = 
 	GS101_PIN_BANK_EINTG(2, 0x1C0, "gpg7", 0x38, 0x38),
 };
 
+/*
+ * TODO: try gs101_pinctrl_{suspend,resume} (preserves eint_fltcon), as per
+ * https://lore.kernel.org/all/20251202093613.852109-6-youngmin.nam@samsung.com/
+ */
 static const struct samsung_pin_ctrl exynos5515_pin_ctrl[] __initconst = {
 	{
 		/* pin-controller instance 0 ALIVE data */
