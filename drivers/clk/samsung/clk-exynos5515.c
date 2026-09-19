@@ -1668,7 +1668,7 @@ PNAME(mout_pll_apm_bus_user_p)			= { "frat_apm_oscclk_rco",
 PNAME(mout_pll_apm_alive_rco_i3c_pmic_user_p)	= { "frat_apm_oscclk_rco",
 						    "frat_apm_rco_i3c_pmic" };
 
-PNAME(mout_pll_apm_rco_apm_user_p)		= { "frat_apm_oscclk_rco",
+PNAME(mout_pll_apm_rco_user_p)			= { "frat_apm_oscclk_rco",
 						    "frat_apm_rco" };
 
 PNAME(mout_apm_chub_bus_p)			= { "mout_pll_apm_bus_user",
@@ -1680,7 +1680,7 @@ PNAME(mout_apm_cmgp_peri_p)			= { "mout_pll_apm_bus_user",
 PNAME(mout_apm_vts_bus_p)			= { "mout_pll_apm_bus_user",
 						    "mout_pll_apm_rco_400" };
 
-PNAME(mout_apm_bus_p)				= { "mout_pll_apm_rco_apm_user",
+PNAME(mout_apm_bus_p)				= { "mout_pll_apm_rco_user",
 						    "mout_pll_apm_bus_user",
 						    "mout_pll_apm_rco_400" };
 
@@ -1695,8 +1695,8 @@ PNAME(mout_apm_uart_dbgcore_p)			= { "frat_apm_oscclk_rco",
 
 static const struct samsung_mux_clock apm_mux_clks[] __initconst = {
 	/* APM */
-	MUX(CLK_MOUT_PLL_RCO_APM_USER, "mout_pll_apm_rco_apm_user",
-	    mout_pll_apm_rco_apm_user_p,
+	MUX(CLK_MOUT_PLL_APM_RCO_USER, "mout_pll_apm_rco_user",
+	    mout_pll_apm_rco_user_p,
 	    PLL_CON0_MUX_CLK_RCO_APM_USER,
 	    4, 1),
 	MUX(CLK_MOUT_PLL_APM_BUS_USER, "mout_pll_apm_bus_user",
@@ -2332,38 +2332,38 @@ PNAME(mout_cmgp_adc_p)	= { "oscclk", /* TODO: document dependency */
 			    "dout_cmgp_adc" };
 
 /* Parent clock list for CMU_CMGP muxes: for I2C */
-PNAME(mout_cmgp_i2c0_p)	= { "mout_pll_apm_rco_apm_user", /* TODO: from CMU_APM, document */
+PNAME(mout_cmgp_i2c0_p)	= { "mout_pll_apm_rco_user", /* TODO: from CMU_APM, document */
 			    "dout_apm_cmgp_peri" }; /* TODO: from CMU_APM, document */
 
-PNAME(mout_cmgp_i2c1_p)	= { "mout_pll_apm_rco_apm_user",
+PNAME(mout_cmgp_i2c1_p)	= { "mout_pll_apm_rco_user",
 			    "dout_apm_cmgp_peri" };
 
-PNAME(mout_cmgp_i2c2_p)	= { "mout_pll_apm_rco_apm_user",
+PNAME(mout_cmgp_i2c2_p)	= { "mout_pll_apm_rco_user",
 			    "dout_apm_cmgp_peri" };
 
-PNAME(mout_cmgp_i2c3_p)	= { "mout_pll_apm_rco_apm_user",
+PNAME(mout_cmgp_i2c3_p)	= { "mout_pll_apm_rco_user",
 			    "dout_apm_cmgp_peri" };
 
-PNAME(mout_cmgp_i2c4_p)	= { "mout_pll_apm_rco_apm_user",
+PNAME(mout_cmgp_i2c4_p)	= { "mout_pll_apm_rco_user",
 			    "dout_apm_cmgp_peri" };
 
-PNAME(mout_cmgp_i2c5_p)	= { "mout_pll_apm_rco_apm_user",
+PNAME(mout_cmgp_i2c5_p)	= { "mout_pll_apm_rco_user",
 			    "dout_apm_cmgp_peri" };
 
-PNAME(mout_cmgp_i2c6_p)	= { "mout_pll_apm_rco_apm_user",
+PNAME(mout_cmgp_i2c6_p)	= { "mout_pll_apm_rco_user",
 			    "dout_apm_cmgp_peri" };
 
 /* Parent clock list for CMU_CMGP muxes: for USI */
-PNAME(mout_cmgp_usi0_p)	= { "mout_pll_apm_rco_apm_user",
+PNAME(mout_cmgp_usi0_p)	= { "mout_pll_apm_rco_user",
 			    "dout_apm_cmgp_peri" };
 
-PNAME(mout_cmgp_usi1_p)	= { "mout_pll_apm_rco_apm_user",
+PNAME(mout_cmgp_usi1_p)	= { "mout_pll_apm_rco_user",
 			    "dout_apm_cmgp_peri" };
 
-PNAME(mout_cmgp_usi2_p)	= { "mout_pll_apm_rco_apm_user",
+PNAME(mout_cmgp_usi2_p)	= { "mout_pll_apm_rco_user",
 			    "dout_apm_cmgp_peri" };
 
-PNAME(mout_cmgp_usi3_p)	= { "mout_pll_apm_rco_apm_user",
+PNAME(mout_cmgp_usi3_p)	= { "mout_pll_apm_rco_user",
 			    "dout_apm_cmgp_peri" };
 
 static const struct samsung_mux_clock cmgp_mux_clks[] __initconst = {
