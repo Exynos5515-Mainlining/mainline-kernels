@@ -323,7 +323,7 @@
 			#clock-cells = <1>;
 
 			clocks = <&oscclk>,
-				 <&cmu_apm CLK_MOUT_PLL_APM_RCO_APM_USER>,
+				 <&cmu_apm CLK_MOUT_PLL_APM_RCO_USER>,
 				 <&cmu_apm CLK_DOUT_APM_CMGP_PERI>;
 			clock-names = "oscclk",
 				      "rco",
