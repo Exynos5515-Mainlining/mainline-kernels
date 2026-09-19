@@ -240,7 +240,7 @@
 };
 
 &hsi2c_6 {
-	status = "okay";
+	status = "disabled"; /* Disabled due to no USI impl and sharing address */
 };
 
 &hsi2c_7 {
@@ -248,7 +248,7 @@
 };
 
 &hsi2c_8 {
-	status = "okay";
+	status = "disabled";
 };
 
 &hsi2c_9 {
@@ -256,7 +256,7 @@
 };
 
 &hsi2c_10 {
-	status = "okay";
+	status = "disabled";
 };
 
 &hsi2c_11 {
@@ -264,7 +264,7 @@
 };
 
 &hsi2c_12 {
-	status = "okay";
+	status = "disabled";
 };
 
 &hsi2c_13 {
