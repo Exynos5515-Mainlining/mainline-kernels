@@ -18,6 +18,7 @@
 
 	aliases {
 		pinctrl0 = &pinctrl_alive;
+		pinctrl1 = &pinctrl_cmgp;
 		pinctrl3 = &pinctrl_fsys;
 		pinctrl4 = &pinctrl_peri;
 	};
