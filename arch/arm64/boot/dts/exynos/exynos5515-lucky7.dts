@@ -239,6 +239,50 @@
 	status = "okay";
 };
 
+&hsi2c_6 {
+	status = "okay";
+};
+
+&hsi2c_7 {
+	status = "okay";
+};
+
+&hsi2c_8 {
+	status = "okay";
+};
+
+&hsi2c_9 {
+	status = "okay";
+};
+
+&hsi2c_10 {
+	status = "okay";
+};
+
+&hsi2c_11 {
+	status = "okay";
+};
+
+&hsi2c_12 {
+	status = "okay";
+};
+
+&hsi2c_13 {
+	status = "okay";
+};
+
+&hsi2c_14 {
+	status = "okay";
+};
+
+&hsi2c_15 {
+	status = "okay";
+};
+
+&hsi2c_16 {
+	status = "okay";
+};
+
 &mmc {
 	/* TODO: Try higher slew rates in place of sd0_clk */
 	pinctrl-names = "default";

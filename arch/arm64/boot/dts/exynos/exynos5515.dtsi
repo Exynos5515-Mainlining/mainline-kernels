@@ -330,6 +330,127 @@
 				      "peri";
 		};
 
+		pinctrl_cmgp: pinctrl@12b30000 {
+			compatible = "samsung,exynos5515-pinctrl";
+			reg = <0x12b30000 0x1000>;
+
+			/* TODO: fix suspend with pinctrl driver */
+			wakeup-interrupt-controller {
+				compatible = "samsung,exynos5515-wakeup-eint",
+					     "samsung,exynos7-wakeup-eint";
+			};
+		};
+
+		hsi2c_6: i2c@12bc0000 {
+			compatible = "i2c-gpio";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			scl-gpios = <&gpm0 0 GPIO_ACTIVE_LOW>;
+			sda-gpios = <&gpm1 0 GPIO_ACTIVE_LOW>;
+
+			status = "disabled";
+		};
+
+		hsi2c_7: i2c@12bd0000 {
+			compatible = "i2c-gpio";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			scl-gpios = <&gpm2 0 GPIO_ACTIVE_LOW>;
+			sda-gpios = <&gpm3 0 GPIO_ACTIVE_LOW>;
+
+			status = "disabled";
+		};
+
+		hsi2c_8: i2c@12be0000 {
+			compatible = "i2c-gpio";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			scl-gpios = <&gpm4 0 GPIO_ACTIVE_LOW>;
+			sda-gpios = <&gpm5 0 GPIO_ACTIVE_LOW>;
+
+			status = "disabled";
+		};
+
+		hsi2c_9: i2c@12bf0000 {
+			compatible = "i2c-gpio";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			scl-gpios = <&gpm6 0 GPIO_ACTIVE_LOW>;
+			sda-gpios = <&gpm7 0 GPIO_ACTIVE_LOW>;
+
+			status = "disabled";
+		};
+
+		hsi2c_10: i2c@12c00000 {
+			compatible = "i2c-gpio";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			scl-gpios = <&gpm8 0 GPIO_ACTIVE_LOW>;
+			sda-gpios = <&gpm9 0 GPIO_ACTIVE_LOW>;
+
+			status = "disabled";
+		};
+
+		hsi2c_11: i2c@12c10000 {
+			compatible = "i2c-gpio";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			scl-gpios = <&gpm10 0 GPIO_ACTIVE_LOW>;
+			sda-gpios = <&gpm11 0 GPIO_ACTIVE_LOW>;
+
+			status = "disabled";
+		};
+
+		hsi2c_12: i2c@12c20000 {
+			compatible = "i2c-gpio";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			scl-gpios = <&gpm12 0 GPIO_ACTIVE_LOW>;
+			sda-gpios = <&gpm13 0 GPIO_ACTIVE_LOW>;
+
+			status = "disabled";
+		};
+
+		hsi2c_13: i2c@12c30000 {
+			compatible = "i2c-gpio";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			scl-gpios = <&gpm14 0 GPIO_ACTIVE_LOW>;
+			sda-gpios = <&gpm15 0 GPIO_ACTIVE_LOW>;
+
+			status = "disabled";
+		};
+
+		hsi2c_14: i2c@12c40000 {
+			compatible = "i2c-gpio";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			scl-gpios = <&gpm16 0 GPIO_ACTIVE_LOW>;
+			sda-gpios = <&gpm17 0 GPIO_ACTIVE_LOW>;
+
+			status = "disabled";
+		};
+
+		hsi2c_15: i2c@12c50000 {
+			compatible = "i2c-gpio";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			scl-gpios = <&gpm18 0 GPIO_ACTIVE_LOW>;
+			sda-gpios = <&gpm19 0 GPIO_ACTIVE_LOW>;
+
+			status = "disabled";
+		};
+
+		hsi2c_16: i2c@12c60000 {
+			compatible = "i2c-gpio";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			scl-gpios = <&gpm20 0 GPIO_ACTIVE_LOW>;
+			sda-gpios = <&gpm21 0 GPIO_ACTIVE_LOW>;
+
+			status = "disabled";
+		};
+
 		cmu_top: clock-controller@15410000 {
 			compatible = "samsung,exynos5515-cmu-top";
 			reg = <0x15410000 0x10000>;
