@@ -318,6 +318,16 @@
 			reg = <0x12860000 0x10000>;
 		};
 
+		ap2apm_mailbox: mailbox@12900000 {
+			compatible = "samsung,exynos5515-mbox",
+				     "samsung,exynos850-mbox";
+			reg = <0x12900000 0x1000>;
+			clocks = <&cmu_apm CLK_GOUT_APM_MAILBOX_AP_PCLK>;
+			clock-names = "pclk";
+			interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
+			#mbox-cells = <0>;
+		};
+
 		cmu_cmgp: clock-controller@12b00000 {
 			compatible = "samsung,exynos5515-cmu-cmgp";
 			reg = <0x12b00000 0x10000>;
@@ -450,6 +460,12 @@
 			sda-gpios = <&gpm21 0 GPIO_ACTIVE_LOW>;
 
 			status = "disabled";
+		};
+
+		apm_sram {
+			compatible = "samsung,exynos5515-acpm-sram",
+				     "samsung,exynos850-acpm-sram";
+			reg = <0x12d00000 0x22000>;
 		};
 
 		cmu_top: clock-controller@15410000 {
