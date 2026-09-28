@@ -1796,26 +1796,52 @@ static int s2mps14_pmic_enable_ext_control(struct s2mps11_info *s2mps11,
 
 static int s2mpu02_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay)
 {
+	struct s2mps11_info *s2mps11 = rdev_get_drvdata(rdev);
 	unsigned int ramp_val, ramp_shift, ramp_reg;
 	int rdev_id = rdev_get_id(rdev);
 
-	switch (rdev_id) {
-	case S2MPU02_BUCK1:
-		ramp_shift = S2MPU02_BUCK1_RAMP_SHIFT;
+	switch (s2mps11->dev_type) {
+	case S2MPU02:
+	case S2MPU05:
+		switch (rdev_id) {
+		case S2MPU02_BUCK1:
+			ramp_shift = S2MPU02_BUCK1_RAMP_SHIFT;
+			break;
+		case S2MPU02_BUCK2:
+			ramp_shift = S2MPU02_BUCK2_RAMP_SHIFT;
+			break;
+		case S2MPU02_BUCK3:
+			ramp_shift = S2MPU02_BUCK3_RAMP_SHIFT;
+			break;
+		case S2MPU02_BUCK4:
+			ramp_shift = S2MPU02_BUCK4_RAMP_SHIFT;
+			break;
+		default:
+			return 0;
+		}
+
+		ramp_reg = S2MPU02_REG_RAMP1;
 		break;
-	case S2MPU02_BUCK2:
-		ramp_shift = S2MPU02_BUCK2_RAMP_SHIFT;
+
+	case S2MPW03:
+		switch (rdev_id) {
+		case S2MPW03_BUCK1:
+			ramp_shift = S2MPW03_BUCK1_RAMP_SHIFT;
+			break;
+		case S2MPW03_BUCK4:
+			ramp_shift = S2MPW03_BUCK4_RAMP_SHIFT;
+			break;
+		default:
+			return 0;
+		}
+
+		ramp_reg = S2MPW03_PMIC_REG_BUCK_RAMP;
 		break;
-	case S2MPU02_BUCK3:
-		ramp_shift = S2MPU02_BUCK3_RAMP_SHIFT;
-		break;
-	case S2MPU02_BUCK4:
-		ramp_shift = S2MPU02_BUCK4_RAMP_SHIFT;
-		break;
+
 	default:
-		return 0;
+		return -EINVAL;
 	}
-	ramp_reg = S2MPU02_REG_RAMP1;
+
 	ramp_val = get_ramp_delay(ramp_delay);
 
 	return regmap_update_bits(rdev->regmap, ramp_reg,
@@ -2129,44 +2155,144 @@ static const struct regulator_desc s2mpu05_regulators[] = {
 	regulator_desc_s2mpu05_buck45(5),
 };
 
-#define regulator_desc_s2mpw03_ldo_reg(num, min, step, reg) {	\
-	.name		= "ldo"#num,				\
-	.id		= S2MPW03_LDO##num,			\
-	.ops		= &s2mpu02_ldo_ops,			\ /* TODO: check */
-	.type		= REGULATOR_VOLTAGE,			\
-	.owner		= THIS_MODULE,				\
-	.min_uV		= min,					\
-	.uV_step	= step,					\
-	.n_voltages	= S2MPW03_LDO_N_VOLTAGES,		\ /* TODO: define */
-	.vsel_reg	= reg,					\
-	.vsel_mask	= S2MPW03_LDO_VSEL_MASK,		\ /* TODO: define */
-	.enable_reg	= reg,					\
-	.enable_mask	= S2MPW03_ENABLE_MASK,			\ /* TODO: define */
-	.enable_time	= S2MPW03_ENABLE_TIME_LDO,		\ /* TODO: define */
+static const struct regulator_ops s2mpw03_ldo_bst_ops = {
+	.list_voltage		= regulator_list_voltage_linear,
+	.map_voltage		= regulator_map_voltage_linear,
+	.is_enabled		= regulator_is_enabled_regmap,
+	.enable			= s2mps11_regulator_enable,
+	.disable		= regulator_disable_regmap,
+	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
+	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
+	.set_voltage_time_sel	= regulator_set_voltage_time_sel,
+};
+
+static const struct regulator_ops s2mpw03_buck_ops = {
+	.list_voltage		= regulator_list_voltage_linear,
+	.map_voltage		= regulator_map_voltage_linear,
+	.is_enabled		= regulator_is_enabled_regmap,
+	.enable			= s2mps11_regulator_enable,
+	.disable		= regulator_disable_regmap,
+	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
+	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
+	.set_voltage_time_sel	= regulator_set_voltage_time_sel,
+	.set_ramp_delay		= s2mpu02_set_ramp_delay,
+};
+
+#define regulator_desc_s2mpw03_ldo_reg(num, min, step, vsel, en) {	\
+	.name		= "ldo"#num,					\
+	.id		= S2MPW03_LDO##num,				\
+	.ops		= &s2mpw03_ldo_bst_ops,				\
+	.type		= REGULATOR_VOLTAGE,				\
+	.owner		= THIS_MODULE,					\
+	.min_uV		= min,						\
+	.uV_step	= step,						\
+	.n_voltages	= S2MPW03_LDO_N_VOLTAGES,			\
+	.vsel_reg	= vsel,						\
+	.vsel_mask	= S2MPW03_LDO_VSEL_MASK,			\
+	.enable_reg	= en,						\
+	.enable_mask	= S2MPW03_ENABLE_MASK,				\
+	.enable_time	= S2MPW03_ENABLE_TIME_LDO			\
 }
+
+#define regulator_desc_s2mpw03_ldo(num, vsel, en, min, step)		\
+	regulator_desc_s2mpw03_ldo_reg(num, min, step,			\
+				       S2MPW03_PMIC_REG_L##num##vsel,	\
+				       S2MPW03_PMIC_REG_L##num##en)
+
+#define regulator_desc_s2mpw03_ldo1(num, vsel, en)			\
+	regulator_desc_s2mpw03_ldo(num, vsel, en, S2MPW03_LDO_MIN4,	\
+				   S2MPW03_LDO_STEP2)			\
+
+#define regulator_desc_s2mpw03_ldo2(num, vsel, en)			\
+	regulator_desc_s2mpw03_ldo(num, vsel, en, S2MPW03_LDO_MIN3,	\
+				   S2MPW03_LDO_STEP2)
+
+#define regulator_desc_s2mpw03_ldo3(num, vsel, en)			\
+	regulator_desc_s2mpw03_ldo(num, vsel, en, S2MPW03_LDO_MIN3,	\
+				   S2MPW03_LDO_STEP1)
+
+#define regulator_desc_s2mpw03_ldo4(num, vsel, en)			\
+	regulator_desc_s2mpw03_ldo(num, vsel, en, S2MPW03_LDO_MIN1,	\
+				   S2MPW03_LDO_STEP2)
+
+#define regulator_desc_s2mpw03_ldo5(num, vsel, en)			\
+	regulator_desc_s2mpw03_ldo(num, vsel, en, S2MPW03_LDO_MIN2,	\
+				   S2MPW03_LDO_STEP1)
 
 #define regulator_desc_s2mpw03_buck(num, which) {		\
 	.name		= "buck"#num,				\
 	.id		= S2MPW03_BUCK##num,			\
-	.ops		= &s2mpw03_buck_ops,			\ /* TODO: implement */
+	.ops		= &s2mpw03_buck_ops,			\
 	.type		= REGULATOR_VOLTAGE,			\
 	.owner		= THIS_MODULE,				\
-	.min_uV		= S2MPW03_BUCK_MIN##which,		\ /* TODO: define */
-	.uV_step	= S2MPW03_BUCK_STEP##which,		\ /* TODO: define */
-	.n_voltages	= S2MPW03_BUCK_N_VOLTAGES,		\ /* TODO: define */
-	.vsel_reg	= S2MPW03_REG_B##num##CTRL2,		\ /* TODO: check, define */
-	.vsel_mask	= S2MPW03_BUCK_VSEL_MASK,		\ /* TODO: define */
-	.enable_reg	= S2MPW03_REG_B##num##CTRL1,		\ /* TODO: check, define */
-	.enable_mask	= S2MPW03_ENABLE_MASK,			\ /* TODO: define */
-	.enable_time	= S2MPW03_ENABLE_TIME_BUCK##num,	\ /* TODO: check, define */
+	.min_uV		= S2MPW03_BUCK_MIN##which,		\
+	.uV_step	= S2MPW03_BUCK_STEP##which,		\
+	.n_voltages	= S2MPW03_BUCK_N_VOLTAGES,		\
+	.vsel_reg	= S2MPW03_PMIC_REG_B##num##CTRL,	\
+	.vsel_mask	= S2MPW03_BUCK_VSEL_MASK,		\
+	.enable_reg	= S2MPW03_PMIC_REG_B##num##CTRL,	\
+	.enable_mask	= S2MPW03_ENABLE_MASK,			\
+	.enable_time	= S2MPW03_ENABLE_TIME_BUCK##num		\
 }
 
-#define regulator_desc_s2mpw03_bst(num, which) {	\
-	/* TODO */
+#define regulator_desc_s2mpw03_buck1(num) regulator_desc_s2mpw03_buck(num, 1)
+#define regulator_desc_s2mpw03_buck2(num) regulator_desc_s2mpw03_buck(num, 2)
+
+#define regulator_desc_s2mpw03_bst(num) {			\
+	.name		= "bst"#num,				\
+	.id		= S2MPW03_BST##num,			\
+	.ops		= &s2mpw03_ldo_bst_ops,			\
+	.type		= REGULATOR_VOLTAGE,			\
+	.owner		= THIS_MODULE,				\
+	.min_uV		= S2MPW03_BST_MIN1,			\
+	.uV_step	= S2MPW03_BST_STEP1,			\
+	.n_voltages	= S2MPW03_BST_N_VOLTAGES,		\
+	.vsel_reg	= S2MPW03_PMIC_REG_BST##num##CTRL,	\
+	.vsel_mask	= S2MPW03_BST_VSEL_MASK,		\
+	.enable_reg	= S2MPW03_PMIC_REG_BST##num##CTRL,	\
+	.enable_mask	= S2MPW03_ENABLE_MASK,			\
+	.enable_time	= S2MPW03_ENABLE_TIME_BST		\
 }
 
 static const struct regulator_desc s2mpw03_regulators[] = {
-	/* TODO */
+	regulator_desc_s2mpw03_ldo3(1, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo2(2, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo3(3, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo2(4, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo3(5, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo5(6, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo3(7, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo4(8, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo4(9, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo1(10, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo3(11, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo3(12, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo2(13, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo1(14, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo3(15, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo1(16, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo2(17, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo2(18, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo1(19, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo1(20, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo1(21, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo2(22, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo2(23, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo2(24, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo1(25, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo2(26, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo3(27, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo4(28, CTRL2, CTRL1),
+	regulator_desc_s2mpw03_ldo2(29, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo3(30, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo1(31, CTRL, CTRL),
+	regulator_desc_s2mpw03_ldo2(32, CTRL, CTRL),
+	regulator_desc_s2mpw03_buck1(1),
+	regulator_desc_s2mpw03_buck2(2),
+	regulator_desc_s2mpw03_buck2(3),
+	regulator_desc_s2mpw03_buck1(4),
+	regulator_desc_s2mpw03_bst(1),
+	regulator_desc_s2mpw03_bst(2),
 };
 
 static int s2mps11_handle_ext_control(struct s2mps11_info *s2mps11,
@@ -2258,6 +2384,11 @@ static int s2mps11_pmic_probe(struct platform_device *pdev)
 		rdev_num = ARRAY_SIZE(s2mpu05_regulators);
 		regulators = s2mpu05_regulators;
 		BUILD_BUG_ON(ARRAY_SIZE(s2mpu05_regulators) > S2MPS_REGULATOR_MAX);
+		break;
+	case S2MPW03:
+		rdev_num = ARRAY_SIZE(s2mpw03_regulators);
+		regulators = s2mpw03_regulators;
+		BUILD_BUG_ON(ARRAY_SIZE(s2mpw03_regulators) > S2MPS_REGULATOR_MAX);
 		break;
 	default:
 		return dev_err_probe(&pdev->dev, -ENODEV,
