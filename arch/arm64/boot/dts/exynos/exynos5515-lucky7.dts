@@ -23,7 +23,6 @@
 		#size-cells = <1>;
 		ranges;
 
-		bootargs = "regulator_ignore_unused pd_ignore_unused earlycon=gs101,0x10080000 loglevel=7";
 		stdout-path = &serial;
 
 		framebuffer@9e0cf000 {
@@ -205,18 +204,6 @@
 	};
 };
 
-&hsi2c_0 {
-	status = "okay";
-};
-
-&hsi2c_1 {
-	status = "okay";
-};
-
-&hsi2c_2 {
-	status = "okay";
-};
-
 &hsi2c_3 {
 	status = "okay";
 
@@ -229,58 +216,6 @@
 		touchscreen-size-x = <396>;
 		touchscreen-size-y = <396>;
 	};
-};
-
-&hsi2c_4 {
-	status = "okay";
-};
-
-&hsi2c_5 {
-	status = "okay";
-};
-
-&hsi2c_6 {
-	status = "disabled"; /* Disabled due to no USI impl and sharing address */
-};
-
-&hsi2c_7 {
-	status = "okay";
-};
-
-&hsi2c_8 {
-	status = "disabled";
-};
-
-&hsi2c_9 {
-	status = "okay";
-};
-
-&hsi2c_10 {
-	status = "disabled";
-};
-
-&hsi2c_11 {
-	status = "okay";
-};
-
-&hsi2c_12 {
-	status = "disabled";
-};
-
-&hsi2c_13 {
-	status = "okay";
-};
-
-&hsi2c_14 {
-	status = "okay";
-};
-
-&hsi2c_15 {
-	status = "okay";
-};
-
-&hsi2c_16 {
-	status = "okay";
 };
 
 &mmc {

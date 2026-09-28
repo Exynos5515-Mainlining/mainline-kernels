@@ -25,6 +25,7 @@
 #include <linux/mfd/samsung/s2mps15.h>
 #include <linux/mfd/samsung/s2mpu02.h>
 #include <linux/mfd/samsung/s2mpu05.h>
+#include <linux/mfd/samsung/s2mpw03.h>
 
 enum {
 	S2MPG10_REGULATOR_OPS_STD,
@@ -273,6 +274,7 @@ static int s2mps11_regulator_enable(struct regulator_dev *rdev)
 			val = rdev->desc->enable_mask;
 		break;
 	case S2MPU05:
+	case S2MPW03:
 		val = rdev->desc->enable_mask;
 		break;
 	default:
@@ -2127,6 +2129,46 @@ static const struct regulator_desc s2mpu05_regulators[] = {
 	regulator_desc_s2mpu05_buck45(5),
 };
 
+#define regulator_desc_s2mpw03_ldo_reg(num, min, step, reg) {	\
+	.name		= "ldo"#num,				\
+	.id		= S2MPW03_LDO##num,			\
+	.ops		= &s2mpu02_ldo_ops,			\ /* TODO: check */
+	.type		= REGULATOR_VOLTAGE,			\
+	.owner		= THIS_MODULE,				\
+	.min_uV		= min,					\
+	.uV_step	= step,					\
+	.n_voltages	= S2MPW03_LDO_N_VOLTAGES,		\ /* TODO: define */
+	.vsel_reg	= reg,					\
+	.vsel_mask	= S2MPW03_LDO_VSEL_MASK,		\ /* TODO: define */
+	.enable_reg	= reg,					\
+	.enable_mask	= S2MPW03_ENABLE_MASK,			\ /* TODO: define */
+	.enable_time	= S2MPW03_ENABLE_TIME_LDO,		\ /* TODO: define */
+}
+
+#define regulator_desc_s2mpw03_buck(num, which) {		\
+	.name		= "buck"#num,				\
+	.id		= S2MPW03_BUCK##num,			\
+	.ops		= &s2mpw03_buck_ops,			\ /* TODO: implement */
+	.type		= REGULATOR_VOLTAGE,			\
+	.owner		= THIS_MODULE,				\
+	.min_uV		= S2MPW03_BUCK_MIN##which,		\ /* TODO: define */
+	.uV_step	= S2MPW03_BUCK_STEP##which,		\ /* TODO: define */
+	.n_voltages	= S2MPW03_BUCK_N_VOLTAGES,		\ /* TODO: define */
+	.vsel_reg	= S2MPW03_REG_B##num##CTRL2,		\ /* TODO: check, define */
+	.vsel_mask	= S2MPW03_BUCK_VSEL_MASK,		\ /* TODO: define */
+	.enable_reg	= S2MPW03_REG_B##num##CTRL1,		\ /* TODO: check, define */
+	.enable_mask	= S2MPW03_ENABLE_MASK,			\ /* TODO: define */
+	.enable_time	= S2MPW03_ENABLE_TIME_BUCK##num,	\ /* TODO: check, define */
+}
+
+#define regulator_desc_s2mpw03_bst(num, which) {	\
+	/* TODO */
+}
+
+static const struct regulator_desc s2mpw03_regulators[] = {
+	/* TODO */
+};
+
 static int s2mps11_handle_ext_control(struct s2mps11_info *s2mps11,
 				      struct regulator_dev *rdev)
 {
@@ -2274,6 +2316,7 @@ static const struct platform_device_id s2mps11_pmic_id[] = {
 	{ .name = "s2mps15-regulator", .driver_data = S2MPS15X },
 	{ .name = "s2mpu02-regulator", .driver_data = S2MPU02 },
 	{ .name = "s2mpu05-regulator", .driver_data = S2MPU05 },
+	{ .name = "s2mpw03-regulator", .driver_data = S2MPW03 },
 	{ }
 };
 MODULE_DEVICE_TABLE(platform, s2mps11_pmic_id);
@@ -2291,5 +2334,5 @@ module_platform_driver(s2mps11_pmic_driver);
 
 /* Module information */
 MODULE_AUTHOR("Sangbeom Kim <sbkim73@samsung.com>");
-MODULE_DESCRIPTION("Samsung S2MPS11/14/15/S2MPU02/05 Regulator Driver");
+MODULE_DESCRIPTION("Samsung S2MPS/U/W Regulator Driver");
 MODULE_LICENSE("GPL");
