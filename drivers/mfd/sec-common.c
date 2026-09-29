@@ -106,6 +106,10 @@ static const struct mfd_cell s2mpu05_devs[] = {
 	MFD_CELL_RES("s2mps15-rtc", s2mpu05_rtc_resources),
 };
 
+static const struct mfd_cell s2mpw03_devs[] = {
+	MFD_CELL_NAME("s2mpw03-regulator"),
+};
+
 static const struct resource s2mu005_muic_resources[] = {
 	DEFINE_RES_IRQ_NAMED(S2MU005_IRQ_MUIC_ATTACH, "attach"),
 	DEFINE_RES_IRQ_NAMED(S2MU005_IRQ_MUIC_DETACH, "detach"),
@@ -125,7 +129,8 @@ static void sec_pmic_dump_rev(struct sec_pmic_dev *sec_pmic)
 	switch (sec_pmic->device_type) {
 	case S2MPG10:
 	case S2MPG11:
-		/* For s2mpg1x, the revision is in a different regmap */
+	case S2MPW03:
+		/* For s2mpg1x/s2mpw03, the revision is in a different regmap */
 		return;
 	case S2MU005:
 		reg = S2MU005_REG_ID;
@@ -270,6 +275,10 @@ int sec_pmic_probe(struct device *dev, int device_type, unsigned int irq,
 	case S2MPU05:
 		sec_devs = s2mpu05_devs;
 		num_sec_devs = ARRAY_SIZE(s2mpu05_devs);
+		break;
+	case S2MPW03:
+		sec_devs = s2mpw03_devs;
+		num_sec_devs = ARRAY_SIZE(s2mpw03_devs);
 		break;
 	case S2MU005:
 		sec_devs = s2mu005_devs;

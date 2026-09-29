@@ -14,6 +14,7 @@
 #include <linux/mfd/samsung/rtc.h>
 #include <linux/mfd/samsung/s2mpg10.h>
 #include <linux/mfd/samsung/s2mpg11.h>
+#include <linux/mfd/samsung/s2mpw03.h>
 #include <linux/module.h>
 #include <linux/of.h>
 #include <linux/platform_device.h>
@@ -365,6 +366,67 @@ static const struct regmap_config s2mpg11_regmap_config_meter = {
 	.cache_type = REGCACHE_FLAT,
 };
 
+static const struct regmap_range s2mpw03_pmic_registers[] = {
+	regmap_reg_range(0x00, 0x07), /* Interrupts */
+	regmap_reg_range(0x08, 0x09), /* Status */
+	regmap_reg_range(0x0a, 0x0b), /* Power on/off source */
+	regmap_reg_range(0x0e, 0x11), /* PMIC control */
+	regmap_reg_range(0x16, 0x20), /* Buck control */
+	regmap_reg_range(0x24, 0x29), /* Boost control */
+	regmap_reg_range(0x2b, 0x50), /* Specific LDO control */
+	regmap_reg_range(0x55, 0x55), /* Specific LDO control */
+	regmap_reg_range(0x57, 0x57), /* All LDO control */
+};
+
+static const struct regmap_range s2mpw03_pmic_ro_registers[] = {
+	regmap_reg_range(0x00, 0x03), /* Interrupts */
+	regmap_reg_range(0x08, 0x09), /* Status */
+	regmap_reg_range(0x0a, 0x0b), /* Power on/off source */
+};
+
+static const struct regmap_range s2mpw03_pmic_nonvolatile_registers[] = {
+	regmap_reg_range(0x04, 0x07), /* Interrupts */
+};
+
+static const struct regmap_range s2mpw03_pmic_precious_registers[] = {
+	regmap_reg_range(0x00, 0x03), /* Interrupts */
+};
+
+static const struct regmap_access_table s2mpw03_pmic_wr_table = {
+	.yes_ranges = s2mpw03_pmic_registers,
+	.n_yes_ranges = ARRAY_SIZE(s2mpw03_pmic_registers),
+	.no_ranges = s2mpw03_pmic_ro_registers,
+	.n_no_ranges = ARRAY_SIZE(s2mpw03_pmic_ro_registers),
+};
+
+static const struct regmap_access_table s2mpw03_pmic_rd_table = {
+	.yes_ranges = s2mpw03_pmic_registers,
+	.n_yes_ranges = ARRAY_SIZE(s2mpw03_pmic_registers),
+};
+
+static const struct regmap_access_table s2mpw03_pmic_volatile_table = {
+	.no_ranges = s2mpw03_pmic_nonvolatile_registers,
+	.n_no_ranges = ARRAY_SIZE(s2mpw03_pmic_nonvolatile_registers),
+};
+
+static const struct regmap_access_table s2mpw03_pmic_precious_table = {
+	.yes_ranges = s2mpw03_pmic_precious_registers,
+	.n_yes_ranges = ARRAY_SIZE(s2mpw03_pmic_precious_registers),
+};
+
+static const struct regmap_config s2mpw03_regmap_config_pmic = {
+	.name = "pmic",
+	.reg_bits = ACPM_ADDR_BITS,
+	.val_bits = 8,
+	.max_register = S2MPW03_PMIC_REG_LDO_CTRL2,
+	.wr_table = &s2mpw03_pmic_wr_table,
+	.rd_table = &s2mpw03_pmic_rd_table,
+	.volatile_table = &s2mpw03_pmic_volatile_table,
+	.precious_table = &s2mpw03_pmic_precious_table,
+	.num_reg_defaults_raw = S2MPW03_PMIC_REG_LDO_CTRL2 + 1,
+	.cache_type = REGCACHE_FLAT,
+};
+
 struct sec_pmic_acpm_shared_bus_context {
 	struct acpm_handle *acpm;
 	unsigned int acpm_chan_id;
@@ -559,9 +621,17 @@ static const struct sec_pmic_acpm_platform_data s2mpg11_data = {
 	.regmap_cfg_meter = &s2mpg11_regmap_config_meter,
 };
 
+static const struct sec_pmic_acpm_platform_data s2mpw03_data = {
+	.device_type = S2MPW03,
+	.acpm_chan_id = 2,
+	.speedy_channel = 0,
+	.regmap_cfg_pmic = &s2mpw03_regmap_config_pmic,
+};
+
 static const struct of_device_id sec_pmic_acpm_of_match[] = {
 	{ .compatible = "samsung,s2mpg10-pmic", .data = &s2mpg10_data, },
 	{ .compatible = "samsung,s2mpg11-pmic", .data = &s2mpg11_data, },
+	{ .compatible = "samsung,s2mpw03-pmic", .data = &s2mpw03_data, },
 	{ },
 };
 MODULE_DEVICE_TABLE(of, sec_pmic_acpm_of_match);

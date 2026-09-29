@@ -330,6 +330,9 @@ static int s2mps11_regulator_set_suspend_disable(struct regulator_dev *rdev)
 			break;
 		}
 		break;
+	case S2MPW03:
+		/* TODO */
+		/* break; */
 	default:
 		return -EINVAL;
 	}
