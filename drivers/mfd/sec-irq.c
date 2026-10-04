@@ -16,6 +16,7 @@
 #include <linux/mfd/samsung/s2mps14.h>
 #include <linux/mfd/samsung/s2mpu02.h>
 #include <linux/mfd/samsung/s2mpu05.h>
+#include <linux/mfd/samsung/s2mpw03.h>
 #include <linux/mfd/samsung/s2mu005.h>
 #include <linux/mfd/samsung/s5m8767.h>
 #include <linux/regmap.h>
@@ -224,6 +225,29 @@ static const struct regmap_irq s2mpu05_irqs[] = {
 	REGMAP_IRQ_REG(S2MPU05_IRQ_TSD, 2, S2MPU05_IRQ_TSD_MASK),
 };
 
+static const struct regmap_irq s2mpw03_pmic_irqs[] = {
+	REGMAP_IRQ_REG(S2MPW03_PMIC_IRQ_PWRONR, 0, S2MPW03_PMIC_IRQ_PWRONR_MASK),
+	REGMAP_IRQ_REG(S2MPW03_PMIC_IRQ_PWRONF, 0, S2MPW03_PMIC_IRQ_PWRONF_MASK),
+	REGMAP_IRQ_REG(S2MPW03_PMIC_IRQ_JIGONBF, 0, S2MPW03_PMIC_IRQ_JIGONBF_MASK),
+	REGMAP_IRQ_REG(S2MPW03_PMIC_IRQ_JIGONBR, 0, S2MPW03_PMIC_IRQ_JIGONBR_MASK),
+	REGMAP_IRQ_REG(S2MPW03_PMIC_IRQ_ACOKBF, 0, S2MPW03_PMIC_IRQ_ACOKBF_MASK),
+	REGMAP_IRQ_REG(S2MPW03_PMIC_IRQ_ACOKBR, 0, S2MPW03_PMIC_IRQ_ACOKBR_MASK),
+	REGMAP_IRQ_REG(S2MPW03_PMIC_IRQ_PWRON1S, 0, S2MPW03_PMIC_IRQ_PWRON1S_MASK),
+	REGMAP_IRQ_REG(S2MPW03_PMIC_IRQ_MRB, 0, S2MPW03_PMIC_IRQ_MRB_MASK),
+
+	REGMAP_IRQ_REG(S2MPW03_PMIC_IRQ_RTC60S, 1, S2MPW03_PMIC_IRQ_RTC60S_MASK),
+	REGMAP_IRQ_REG(S2MPW03_PMIC_IRQ_RTCA1, 1, S2MPW03_PMIC_IRQ_RTCA1_MASK),
+	REGMAP_IRQ_REG(S2MPW03_PMIC_IRQ_RTCA0, 1, S2MPW03_PMIC_IRQ_RTCA0_MASK),
+	REGMAP_IRQ_REG(S2MPW03_PMIC_IRQ_SMPL, 1, S2MPW03_PMIC_IRQ_SMPL_MASK),
+	REGMAP_IRQ_REG(S2MPW03_PMIC_IRQ_RTC1S, 1, S2MPW03_PMIC_IRQ_RTC1S_MASK),
+	REGMAP_IRQ_REG(S2MPW03_PMIC_IRQ_WTSR, 1, S2MPW03_PMIC_IRQ_WTSR_MASK),
+	REGMAP_IRQ_REG(S2MPW03_PMIC_IRQ_WRSTB, 1, S2MPW03_PMIC_IRQ_WRSTB_MASK),
+
+	REGMAP_IRQ_REG(S2MPW03_PMIC_IRQ_120C, 2, S2MPW03_PMIC_IRQ_120C_MASK),
+	REGMAP_IRQ_REG(S2MPW03_PMIC_IRQ_140C, 2, S2MPW03_PMIC_IRQ_140C_MASK),
+	REGMAP_IRQ_REG(S2MPW03_PMIC_IRQ_TSD, 2, S2MPW03_PMIC_IRQ_TSD_MASK),
+};
+
 static const struct regmap_irq s2mu005_irqs[] = {
 	REGMAP_IRQ_REG(S2MU005_IRQ_CHGR_DETBAT, 0, S2MU005_IRQ_CHGR_DETBAT_MASK),
 	REGMAP_IRQ_REG(S2MU005_IRQ_CHGR_BAT, 0, S2MU005_IRQ_CHGR_BAT_MASK),
@@ -397,6 +421,16 @@ static const struct regmap_irq_chip s2mpu05_irq_chip = {
 	.ack_base = S2MPU05_REG_INT1,
 };
 
+static const struct regmap_irq_chip s2mpw03_irq_chip_pmic = {
+	.name = "s2mpw03-pmic",
+	.domain_suffix = "pmic",
+	.status_base = S2MPW03_PMIC_REG_INT1,
+	.mask_base = S2MPW03_PMIC_REG_INT1M,
+	.num_regs = 4,
+	.irqs = s2mpw03_pmic_irqs,
+	.num_irqs = ARRAY_SIZE(s2mpw03_pmic_irqs),
+};
+
 static const struct regmap_irq_chip s2mu005_irq_chip = {
 	.name = "s2mu005",
 	.irqs = s2mu005_irqs,
@@ -511,6 +545,9 @@ struct regmap_irq_chip_data *sec_irq_init(struct sec_pmic_dev *sec_pmic)
 		break;
 	case S2MPU05:
 		sec_irq_chip = &s2mpu05_irq_chip;
+		break;
+	case S2MPW03:
+		/* TODO */
 		break;
 	case S2MU005:
 		sec_irq_chip = &s2mu005_irq_chip;
